@@ -1,0 +1,18 @@
+import winim
+
+var hWindow: HWND
+
+proc winbackcall(hWindow: HWND, param: LPARAM): WINBOOL {.stdcall.} =
+    var edgeClass = T(256)
+    var pid: DWORD
+    var titleText = T(256)
+    if hWindow == 0:
+        echo "not found"
+        quit(-2)
+    GetWindowThreadProcessId(hWindow, &pid)
+    GetWindowText(hWindow, titleText, 256)
+    GetClassNameW(hWindow, &edgeClass, 256)
+    echo "Title: ", titleText, "PID: ", pid, " ClassName: ", edgeClass
+    return true
+
+EnumWindows(winbackcall, cast[LPARAM](nil))
